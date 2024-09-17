@@ -1,31 +1,26 @@
-import uuid
-from typing import Optional
+#!/usr/bin/env python3
 
-from fastapi import Depends, Request
+import uuid
+from collections.abc import AsyncGenerator
+
 from fastapi_users import BaseUserManager, UUIDIDMixin
 
-from app.internal.models.user import User
-from app.internal.database.mongo import get_user_db
 from app.config import APP_SETINGS
+from app.internal.database.mongo import get_user_db
+from app.internal.models.user import User
 
 
 class UserManager(UUIDIDMixin, BaseUserManager[User, uuid.UUID]):
+    "Manager for User."
+
     reset_password_token_secret = APP_SETINGS.SECRET
     verification_token_secret = APP_SETINGS.SECRET
 
-    async def on_after_register(self, user: User, request: Optional[Request] = None):
-        print(f"User {user.id} has registered.")
 
-    async def on_after_forgot_password(
-        self, user: User, token: str, request: Optional[Request] = None
-    ):
-        print(f"User {user.id} has forgot their password. Reset token: {token}")
-
-    async def on_after_request_verify(
-        self, user: User, token: str, request: Optional[Request] = None
-    ):
-        print(f"Verification requested for user {user.id}. Verification token: {token}")
+# Add reset password from documentation
 
 
-async def get_user_manager(user_db=Depends(get_user_db)):
+async def get_user_manager() -> AsyncGenerator[type[User]]:
+    "Get manager for user."
+    user_db = get_user_db()
     yield UserManager(user_db)

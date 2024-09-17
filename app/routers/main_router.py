@@ -1,10 +1,10 @@
+#!/usr/bin/env python3
 from fastapi import APIRouter
-
 
 router = APIRouter()
 
 
-
 router.post()
-async def add_course():...
 
+
+# aasync def add_course(): ...

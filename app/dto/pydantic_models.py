@@ -1,34 +1,43 @@
-from pydantic import BaseModel
 import uuid
-from fastapi_users import schemas
+
 from beanie import PydanticObjectId
+from fastapi_users import schemas
+from pydantic import BaseModel
 
 
 class CourseSchema(BaseModel):
-    name : str
-    autor : str
-    description : str
-    category : str
-    tags : list[str]
+    "Pydantic schema for course."
+
+    name: str
+    autor: str
+    description: str
+    category: str
+    tags: list[str]
+
 
 class CourseID(BaseModel):
-    id : PydanticObjectId
+    "Validation of id == Pydantic object id."
+
+    id: PydanticObjectId
+
 
 class CourseUpdate(BaseModel):
-    name : str = None
-    autor : str = None
-    decription : str = None
-    category : str = None
-    tags : list[str] = None
+    "Schema for updating  course data."
+
+    name: str = None
+    autor: str = None
+    decription: str = None
+    category: str = None
+    tags: list[str] = None
 
 
 class UserRead(schemas.BaseUser[uuid.UUID]):
-    pass
+    "Default fastapi_users schema."
 
 
 class UserCreate(schemas.BaseUserCreate):
-    pass
+    "Default fastapi_users schema."
 
 
 class UserUpdate(schemas.BaseUserUpdate):
-    pass
+    "Default fastapi_users schema."

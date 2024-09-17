@@ -1,18 +1,24 @@
 import uuid
-from fastapi_users_db_beanie import BeanieUserDatabase
-from fastapi_users.authentication import BearerTransport, JWTStrategy, AuthenticationBackend
-from fastapi_users import FastAPIUsers
+from collections.abc import AsyncGenerator
+
 import motor.motor_asyncio
-from app.config import settings
+from fastapi_users import FastAPIUsers
+from fastapi_users.authentication import (
+    AuthenticationBackend,
+    BearerTransport,
+    JWTStrategy,
+)
+from fastapi_users_db_beanie import BeanieUserDatabase
+
+from app.config import APP_SETINGS
 from app.internal.models.user import User
 from app.internal.service.user_service import get_user_manager
-from app.config import APP_SETINGS
-
 
 bearer_transport = BearerTransport(tokenUrl="auth/jwt/login")
 
 
 def get_jwt_strategy() -> JWTStrategy:
+    "Return jwt token."
     return JWTStrategy(secret=APP_SETINGS.SECRET, lifetime_seconds=3600)
 
 
@@ -32,9 +38,9 @@ client = motor.motor_asyncio.AsyncIOMotorClient(
 )
 
 
-
 db = client["database_name"]
 
 
-async def get_user_db():
+async def get_user_db() -> AsyncGenerator[type[User]]:
+    "Return User object."
     yield BeanieUserDatabase(User)
