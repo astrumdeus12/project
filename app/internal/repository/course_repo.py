@@ -1,11 +1,11 @@
-from app.dto.pydantic_models import CourseID, CourseSchema
+from app.dto.course_models import CourseSchema, PydantID
 from app.internal.models.course import Course
 
 
 class NotFoundError(Exception):
     "Exception class."
 
-    def __init__(self, course_id: CourseID) -> None:
+    def __init__(self, course_id: PydantID) -> None:
         "Return error message."
         super().__init__(f"Course with id {course_id} not found in the database.")
 
@@ -13,7 +13,7 @@ class NotFoundError(Exception):
 class CourseRepository:
     "Repository model for Course."
 
-    async def get_course_or_error(self, course_id: CourseID) -> Course:
+    async def get_course_or_error(self, course_id: PydantID) -> Course:
         "Return course object."
         course = await Course.find_one(course_id)
         if not course:
@@ -26,19 +26,19 @@ class CourseRepository:
         new_course.insert()
         return f"Course added with ID: {new_course.id}"
 
-    async def remove(self, course_id: CourseID) -> str:
+    async def remove(self, course_id: PydantID) -> str:
         "Remove Course obbject by course_ID."
         course_delete = await self.get_course_or_error(course_id=course_id)
         await course_delete.delete()
         return f"Course with id {course_id} deleted."
 
-    async def update(self, course_id: CourseID, update_course_dto: CourseSchema) -> str:
+    async def update(self, course_id: PydantID, update_course_dto: CourseSchema) -> str:
         "Update Course obbject by course_ID."
         course = await self.get_course_or_error(course_id=course_id)
         await course.update(update_course_dto.model_dump())
         await course.save()
         return f"Course updated with ID: {course_id}"
 
-    async def check(self, course_id: CourseID) -> str:
+    async def check(self, course_id: PydantID) -> str:
         "Use function get course or error to get course object."
         return await self.get_course_or_error(course_id=course_id)

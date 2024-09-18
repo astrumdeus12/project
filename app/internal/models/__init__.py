@@ -1,5 +1,6 @@
 "Initilization of course atributes package."
 
+from app.internal.models.course import Course
 from app.internal.models.course_atributes import (
     Announcement,
     Assessment,
@@ -11,6 +12,7 @@ from app.internal.models.course_atributes import (
     Resourse,
     Rewiew,
 )
+from app.internal.models.user import User
 
 __all__ = [
     "Assessment",
@@ -22,4 +24,6 @@ __all__ = [
     "Discussion",
     "Enrollment",
     "Rewiew",
+    "Course",
+    "User",
 ]
